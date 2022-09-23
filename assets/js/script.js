@@ -28,7 +28,9 @@ function renderCities() {
 }
 function init() {
     var storedCities = JSON.parse(localStorage.getItem("mySavedCities"))
-    prevCities = storedCities;
+    if (storedCities !== null) {
+        prevCities = storedCities;
+    }
     renderCities()
 }
 init()
