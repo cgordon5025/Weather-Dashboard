@@ -6,6 +6,7 @@ var cityList = $("#savedCities")
 searchBtn.addEventListener("click", saveSearch)
 cityList.on("click", "button", showWeather)
 var prevCities = []
+var todayDate = moment().format("MM Do, YYYY")
 function saveSearch(event) {
     event.preventDefault();
     var cityText = inputEl.value.trim();
@@ -58,10 +59,10 @@ function locationAPI() {
 }
 locationAPI()
 var todayWeather;
-
+var city;
+city = "Atlanta"
 function getAPI() {
-    var city;
-    city = "Atlanta"
+
     // var requesturl = "https://api.openweathermap.org/data/2.5/weather?lat=" + myLat + "&lon=" + myLong + "&appid=" + APIKEY + "&units = imperial";
     var myUrl = "https://api.openweathermap.org/data/2.5/weather?q=Atlanta&appid=" + APIKEY + "&units=imperial";
 
@@ -84,7 +85,10 @@ function getAPI() {
 }
 getAPI()
 
-
+var nameAndDate = $("#whereWhen")
 function showWeather() {
+
+
     console.log(todayWeather)
 }
+nameAndDate.text(city + " " + todayDate)
