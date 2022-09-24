@@ -1,8 +1,10 @@
 var APIKEY = "d3a12671db6118879d34ab823b945d7d";
 var inputEl = document.getElementById("cityInput");
 var searchBtn = document.getElementById("submit");
-var cityList = document.getElementById("savedCities")
+// var cityList = document.getElementById("savedCities")
+var cityList = $("#savedCities")
 searchBtn.addEventListener("click", saveSearch)
+cityList.on("click", "button", showWeather)
 var prevCities = []
 function saveSearch(event) {
     event.preventDefault();
@@ -23,7 +25,7 @@ function renderCities() {
         var cityText = prevCities[i]
         var cityBtn = document.createElement("button");
         cityBtn.textContent = cityText;
-        cityList.appendChild(cityBtn);
+        cityList.append(cityBtn);
     }
 }
 function init() {
@@ -55,11 +57,10 @@ function locationAPI() {
         })
 }
 locationAPI()
+var todayWeather;
 
 function getAPI() {
     var city;
-    var todayTemp;
-    var todayWind;
     city = "Atlanta"
     // var requesturl = "https://api.openweathermap.org/data/2.5/weather?lat=" + myLat + "&lon=" + myLong + "&appid=" + APIKEY + "&units = imperial";
     var myUrl = "https://api.openweathermap.org/data/2.5/weather?q=Atlanta&appid=" + APIKEY + "&units=imperial";
@@ -72,21 +73,18 @@ function getAPI() {
         })
         .then(function (data) {
             console.log(data)
-            todayTemp = data.temp
-            return data
+            todayWeather = {
+                todayIcon: data.weather[0].icon,
+                todayTemp: data.main.temp,
+                todayWind: data.wind.speed,
+                todayHumid: data.main.humidity
+            }
+            return data, todayWeather
         })
 }
 getAPI()
 
 
-//city search geocode gives me lat and lon
-
-//make variables and put them in full url for weather
-
-//lat: 
-// 33.749
-// lon
-// : 
-// -84.388
-
-//display weather 
+function showWeather() {
+    console.log(todayWeather)
+}
