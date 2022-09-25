@@ -139,11 +139,11 @@ function displayFuture() {
     }
     console.log("now to put the text content")
     for (var j = 0; j < 5; j++) {
-        // var futureIconURL = "http://openweathermap.org/img/wn/" + (futureForecast[j].futureIcon) + ".png"
+        // var futureIconURL = "http://openweathermap.org/img/wn/" + (futureArray[j].futureIcon) + ".png"
         // futureIconEl.attr('src', futureIconURL)
-        futureTempEl.text("Temp: " + (futureForecast[j].futureTemp) + "\u00B0F");
-        futureWindEl.text("Wind: " + (futureForecast[j].futureWind) + "mph");
-        futureHumidEl.text("Humidity: " + (futureForecast[j].futureHumid) + "%");
+        futureTempEl[j].text("Temp: " + futureArray[j].futureTemp + "\u00B0F");
+        futureWindEl.text("Wind: " + futureArray[j].futureWind + "mph");
+        futureHumidEl.text("Humidity: " + futureArray[j].futureHumid + "%");
     }
 }
 
