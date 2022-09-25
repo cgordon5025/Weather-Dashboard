@@ -6,11 +6,14 @@
 
 <body>
     <header>
-        <h1 class="text-center mb-5 bg-light">Weather Dashboard</h1>
+
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     </header>
+    <nav>
+        <h1 class="text-center p-5 text-light">Weather Dashboard</h1>
+    </nav>
     <div class="row min-vh-100" id="heading">
-        <div class="col-3 mx-5 bg-info " id="inputContainer">
+        <div class="col-3 mx-5" id="inputContainer">
             <input class="mt-5" id="cityInput" placeholder="Enter City" />
             <button class="" id="submit">Search</button>
             <ul class="my-2" id="savedCities"></ul>
@@ -19,9 +22,10 @@
             <div class="card">
                 <div class="container">
                     <h1 id="whereWhen"></h1>
-                    <p>Temp default is in kelvin</p>
-                    <p>Wind</p>
-                    <p>Humidity</p>
+                    <img id="todayIcon" src="" alt="weatherIcon"></p>
+                    <p id="todayTemp"></p>
+                    <p id="todayWind"></p>
+                    <p id="todayHumid"></p>
                     <p>UV Index</p>
                 </div>
             </div>

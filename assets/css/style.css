@@ -6,3 +6,22 @@ button {
     border-radius: 5px;
     background-color: aliceblue;
 }
+
+nav {
+    background: linear-gradient(120deg, #5aa3eb, #8133ee);
+    background-position: center;
+    background-size: cover;
+}
+
+#inputContainer {
+    background-color: #5aa3eb;
+}
+
+ul button {
+    background-color: #5aa3eb;
+    list-style: none;
+}
+
+ul {
+    list-style: none;
+}

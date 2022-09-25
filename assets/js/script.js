@@ -2,38 +2,43 @@ var APIKEY = "d3a12671db6118879d34ab823b945d7d";
 var inputEl = document.getElementById("cityInput");
 var searchBtn = document.getElementById("submit");
 // var cityList = document.getElementById("savedCities")
-var cityList = $("#savedCities")
+var cityList = document.getElementById("savedCities")
+var cityContainter = $("#savedCities")
 searchBtn.addEventListener("click", saveSearch)
-cityList.on("click", "button", showWeather)
+cityContainter.on("click", "button", showWeather)
 var prevCities = []
-var todayDate = moment().format("MM Do, YYYY")
+var todayDate = moment().format("MMMM Do, YYYY")
 function saveSearch(event) {
     event.preventDefault();
     var cityText = inputEl.value.trim();
-    console.log("my" + cityText)
-    console.log(typeof cityText)
-
-    prevCities.push(cityText)
+    if (cityText !== '') {
+        prevCities.push(cityText)
+    }
+    storeCities()
+    renderCities()
+}
+function storeCities() {
     localStorage.setItem("mySavedCities", JSON.stringify(prevCities))
 
-    renderCities()
 }
 function renderCities() {
     cityList.innerHTML = '';
 
     for (var i = 0; i < prevCities.length; i++) {
+        var searchText = prevCities[i]
 
-        var cityText = prevCities[i]
         var cityBtn = document.createElement("button");
-        cityBtn.textContent = cityText;
-        cityList.append(cityBtn);
+        var btnContainer = document.createElement("li");
+
+        cityBtn.textContent = searchText;
+        btnContainer.appendChild(cityBtn)
+        cityList.appendChild(btnContainer);
     }
 }
 function init() {
-    var storedCities = JSON.parse(localStorage.getItem("mySavedCities"))
-    if (storedCities !== null) {
-        prevCities = storedCities;
-    }
+    if (!(localStorage.getItem("mySavedCities"))) {
+        prevCities = [];
+    } else { prevCities = JSON.parse(localStorage.getItem("mySavedCities")) }
     renderCities()
 }
 init()
@@ -75,20 +80,33 @@ function getAPI() {
         .then(function (data) {
             console.log(data)
             todayWeather = {
-                todayIcon: data.weather[0].icon,
+
                 todayTemp: data.main.temp,
                 todayWind: data.wind.speed,
                 todayHumid: data.main.humidity
             }
-            return data, todayWeather
+            var todayIcon = data.weather[0].icon
+            return data, todayWeather, todayIcon
         })
 }
 getAPI()
 
-var nameAndDate = $("#whereWhen")
+var nameAndDate = $("#whereWhen");
+var todayIconEl = $("#todayIcon")
+var todayTempEl = $("#todayTemp");
+var todayWindEl = $("#todayWind");
+var todayHumidEl = $("#todayHumid");
+
 function showWeather() {
 
 
     console.log(todayWeather)
+    console.log("icon " + todayIcon)
+    var iconURL = "http://openweathermap.org/img/w/" + todayIcon + ".png"
+    todayIconEl.attr('src', iconURL);
+    todayTempEl.text("Temp: " + todayWeather.todayTemp + "\u00B0F")
+    todayWindEl.text("Wind: " + todayWeather.todayWind + "mph");
+    todayHumidEl.text("Humidity: " + todayWeather.todayHumid + "%")
+
 }
 nameAndDate.text(city + " " + todayDate)
