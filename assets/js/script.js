@@ -62,6 +62,8 @@ var todayWeather;
 function showPrevCity(event) {
     extractCity(event)
     getAPI()
+
+    showWeather()
 }
 function getAPI() {
     var myUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKEY + "&units=imperial";
@@ -83,23 +85,51 @@ function getAPI() {
 
             return data, todayWeather
         })
-    showWeather()
 }
-// getAPI()
+// futureAPI()
+var testBtn = document.getElementById("test")
+testBtn.addEventListener("click", runFuture)
+var futureList;
+function runFuture() {
+    futureAPI()
+    displayFuture()
+}
 function futureAPI() {
-    var futureURL = "https://api.openweathermap.org/data/2.5/forecast?q=Atlanta&appid=" + APIKEY + "&units=imperial&exclude=minutely,hourly,alerts";
+    var futureURL = "https://api.openweathermap.org/data/2.5/forecast?q=Atlanta&appid=" + APIKEY + "&units=imperial";
     fetch(futureURL)
         .then(function (response) {
             return response.json()
         })
         .then(function (data) {
-            console.log(data)
-            return data
+            // futureList = {
+            //     nextTemp: data.list.main.temp
+            // }
+            futureList = data.list;
+            console.log(futureList)
+            return futureList, data;
         })
-
 }
-// futureAPI()
+var nextForecast = []
+var futureForecast;
+function displayFuture() {
+    for (var i = 0; i < futureList.length; i++) {
+        if (i % 8 == 0) {
+            nextForecast.push(futureList[i])
+        }
+    }
+    console.log(nextForecast)
+    for (var a = 0; a < nextForecast.length; a++) {
+        var futureTemp = nextForecast[a].main.temp;
+        var futureIcon = nextForecast[a].weather[0].icon;
+        var futureWind = nextForecast[a].wind.speed;
+        var futureHumid = nextForecast[a].main.humidity;
 
+
+
+        console.log("this is the future forecast " + futureForecast)
+
+    }
+}
 
 function showWeather() {
 
