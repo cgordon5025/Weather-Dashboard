@@ -46,7 +46,6 @@ function renderCities() {
     }
 }
 function init() {
-    weatherContainer.style.visibility = 'hidden'
     if (!(localStorage.getItem("mySavedCities"))) {
         prevCities = [];
     } else { prevCities = JSON.parse(localStorage.getItem("mySavedCities")) }
@@ -105,31 +104,49 @@ function futureAPI() {
             //     nextTemp: data.list.main.temp
             // }
             futureList = data.list;
-            console.log(futureList)
+            // console.log(futureList)
             return futureList, data;
         })
 }
 var nextForecast = []
 var futureForecast;
+var futureContainer = $("#fiveDayForecast")
+console.log(futureContainer)
+var futureTempEl = $(".futureTemp")
+var futureIconEl = $(".futureIcon")
+var futureWindEl = $(".futureWind")
+var futureHumidEl = $(".futureHumid")
+var futureArray = []
+
 function displayFuture() {
     for (var i = 0; i < futureList.length; i++) {
         if (i % 8 == 0) {
             nextForecast.push(futureList[i])
         }
     }
-    console.log(nextForecast)
+
     for (var a = 0; a < nextForecast.length; a++) {
-        var futureTemp = nextForecast[a].main.temp;
-        var futureIcon = nextForecast[a].weather[0].icon;
-        var futureWind = nextForecast[a].wind.speed;
-        var futureHumid = nextForecast[a].main.humidity;
-
-
-
-        console.log("this is the future forecast " + futureForecast)
+        futureForecast = {
+            futureDate: nextForecast[a].dt_txt,
+            futureTemp: nextForecast[a].main.temp,
+            futureIcon: nextForecast[a].weather[0].icon,
+            futureWind: nextForecast[a].wind.speed,
+            futureHumid: nextForecast[a].main.humidity
+        }
+        console.log(futureForecast.futureIcon)
+        futureArray.push(futureForecast)
 
     }
+    console.log("now to put the text content")
+    for (var j = 0; j < 5; j++) {
+        // var futureIconURL = "http://openweathermap.org/img/wn/" + (futureForecast[j].futureIcon) + ".png"
+        // futureIconEl.attr('src', futureIconURL)
+        futureTempEl.text("Temp: " + (futureForecast[j].futureTemp) + "\u00B0F");
+        futureWindEl.text("Wind: " + (futureForecast[j].futureWind) + "mph");
+        futureHumidEl.text("Humidity: " + (futureForecast[j].futureHumid) + "%");
+    }
 }
+
 
 function showWeather() {
 
@@ -144,6 +161,7 @@ function showWeather() {
 
 }
 init()
+
 
 // /;ets build out the functions to call the weather
 //lat and long from this don't match whats in the CUrrent Weather API
