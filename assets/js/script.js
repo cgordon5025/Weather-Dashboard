@@ -62,6 +62,7 @@ async function saveSearch(event) {
     renderCities();
     getAPI().then(function (res) {
     });
+    
 }
 
 function storeCities() {
@@ -98,8 +99,9 @@ var todayWeather;
 function showPrevCity(event) {
     extractCity(event);
     getAPI();
-
+    futureAPI();
     showWeather();
+    displayFuture();
 }
 
 // futureAPI()
@@ -113,7 +115,7 @@ function runFuture() {
 }
 async function futureAPI() {
     var futureURL =
-        "https://api.openweathermap.org/data/2.5/forecast?q=Atlanta&appid=" +
+        "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" +
         APIKEY +
         "&units=imperial";
     let someData = await fetch(futureURL)
@@ -146,11 +148,12 @@ function displayFuture(res) {
         console.log(futureForecast.futureDate);
         futureArray.push(futureForecast);
     }
-    console.log("now to put the text content");
+    //holds the information to later display
+
     for (var j = 0; j < 5; j++) {
 
         var futureIconURL = "http://openweathermap.org/img/wn/" + (futureArray[j].futureIcon) + ".png";
-        futureDateEl[j].textContent = moment(futureArray[j].futureDate, "YYYY MM Do HH:mm:ss").format("MM Do YY")
+        futureDateEl[j].textContent = moment().add([j], 'days').format('MM/DD/YYYY')
         futureIconEl[j].setAttribute('src', futureIconURL)
         futureTempEl[j].textContent = ("Temp: " + futureArray[j].futureTemp + "\u00B0F");
         futureWindEl[j].textContent = ("Wind: " + futureArray[j].futureWind + "mph");
