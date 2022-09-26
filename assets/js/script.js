@@ -26,6 +26,7 @@ var futureArray = [];
 searchBtn.addEventListener("click", saveSearch);
 cityContainter.on("click", "button", showPrevCity);
 
+//calling the API asynchronously to optimize the calling of the API before running the functoin tha will actually display the information
 async function getAPI() {
     var myUrl =
         "https://api.openweathermap.org/data/2.5/weather?q=" +
@@ -38,7 +39,7 @@ async function getAPI() {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
+            //lets store all of today's data into an object so we can call it later
             todayWeather = {
                 todayIcon: data.weather[0].icon,
                 todayTemp: data.main.temp,
@@ -46,13 +47,27 @@ async function getAPI() {
                 todayHumid: data.main.humidity,
             };
 
+            //now lets show the weather
+            showWeather(todayWeather)
             return todayWeather;
         });
     return endData;
 }
-
+function showWeather(todayWeather) {
+    //establishes the url for the icon to display and show users the weather conditions
+    var iconURL = "http://openweathermap.org/img/wn/" + todayWeather.todayIcon + ".png";
+    //lets show all the data for the current day
+    nameAndDate.text(city + " " + todayDate);
+    todayIconEl.attr("src", iconURL);
+    todayTempEl.text("Temp: " + todayWeather.todayTemp + "\u00B0F");
+    todayWindEl.text("Wind: " + todayWeather.todayWind + "mph");
+    todayHumidEl.text("Humidity: " + todayWeather.todayHumid + "%");
+    weatherContainer.style.visibility = "visible";
+}
 async function saveSearch(event) {
+    //when we save we don't want something to be removed from the search bar
     event.preventDefault();
+    //now we want to save the data and also send the data to an array and display it
     var cityText = inputEl.value.trim();
     if (cityText !== "") {
         prevCities.push(cityText);
@@ -62,27 +77,35 @@ async function saveSearch(event) {
     renderCities();
     getAPI().then(function (res) {
     });
-    
+    runFuture();
+
 }
 
 function storeCities() {
+    //lets store them locally so when we reload the page they'll still be here
     localStorage.setItem("mySavedCities", JSON.stringify(prevCities));
 }
 function renderCities() {
     cityList.innerHTML = "";
 
     for (var i = 0; i < prevCities.length; i++) {
+        //lets add the all of the previous cities as buttons
         var searchText = prevCities[i];
 
         var cityBtn = document.createElement("button");
         var btnContainer = document.createElement("li");
 
         cityBtn.textContent = searchText;
+        cityBtn.classList.add('w-100')
         btnContainer.appendChild(cityBtn);
         cityList.appendChild(btnContainer);
     }
 }
 function init() {
+    //when the page loads we hide the weather display since they have yet to search for things
+    //we also will call down items from local storage, and then we will render the cities
+    weatherContainer.style.visibility = "hidden";
+
     if (!localStorage.getItem("mySavedCities")) {
         prevCities = [];
     } else {
@@ -91,24 +114,23 @@ function init() {
     renderCities();
 }
 function extractCity(event) {
+    //if they pick a previously searched city we want to extract whatever information is in the button they selected
     var cityInput = event.currentTarget.innerHTML;
     city = cityInput;
     return city;
 }
 var todayWeather;
 function showPrevCity(event) {
+    //if they want to see a previous city we will first extract the info and then run the same info that would happen if they just search for it
     extractCity(event);
     getAPI();
-    futureAPI();
-    showWeather();
-    displayFuture();
+    runFuture()
 }
 
-// futureAPI()
-var testBtn = document.getElementById("test");
-testBtn.addEventListener("click", runFuture);
+
 var futureList;
 function runFuture() {
+    //single function for the two functions involved in showing the future forecast
     futureAPI().then(function (res) {
         displayFuture(res);
     });
@@ -129,14 +151,19 @@ async function futureAPI() {
     return someData;
 }
 
+function filterFutureDays(arr, query) {
+    return arr.filter((el) => el.includes(query));
+}
 
 function displayFuture(res) {
     for (var i = 0; i < res.length; i++) {
-        if (i % 8 == 0) {
+        //lets filter for the first instance of each day for the next 5 days, as the API gives me 3 hour intervals for 5 days
+        if (futureList[i].dt_txt.includes('00:00:00')) {
             nextForecast.push(res[i]);
         }
     }
 
+    //now lets store the information into an array of objects
     for (var a = 0; a < nextForecast.length; a++) {
         futureForecast = {
             futureDate: nextForecast[a].dt_txt,
@@ -145,15 +172,14 @@ function displayFuture(res) {
             futureWind: nextForecast[a].wind.speed,
             futureHumid: nextForecast[a].main.humidity,
         };
-        console.log(futureForecast.futureDate);
         futureArray.push(futureForecast);
     }
+
     //holds the information to later display
-
     for (var j = 0; j < 5; j++) {
-
+        //lets do the same things and display the info
         var futureIconURL = "http://openweathermap.org/img/wn/" + (futureArray[j].futureIcon) + ".png";
-        futureDateEl[j].textContent = moment().add([j], 'days').format('MM/DD/YYYY')
+        futureDateEl[j].textContent = moment().add([j + 1], 'days').format('MM/DD/YYYY')
         futureIconEl[j].setAttribute('src', futureIconURL)
         futureTempEl[j].textContent = ("Temp: " + futureArray[j].futureTemp + "\u00B0F");
         futureWindEl[j].textContent = ("Wind: " + futureArray[j].futureWind + "mph");
@@ -161,63 +187,8 @@ function displayFuture(res) {
     }
 }
 
-function showWeather() {
-    var iconURL =
-        "http://openweathermap.org/img/wn/" + todayWeather.todayIcon + ".png";
 
-    nameAndDate.text(city + " " + todayDate);
-    todayIconEl.attr("src", iconURL);
-    todayTempEl.text("Temp: " + todayWeather.todayTemp + "\u00B0F");
-    todayWindEl.text("Wind: " + todayWeather.todayWind + "mph");
-    todayHumidEl.text("Humidity: " + todayWeather.todayHumid + "%");
-    weatherContainer.style.visibility = "visible";
-}
 init();
-
-// /;ets build out the functions to call the weather
-//lat and long from this don't match whats in the CUrrent Weather API
-// var city = "Atlanta";
-// var myLat;
-// var myLong;
-// var locationurl =
-//     "http://api.openweathermap.org/geo/1.0/direct?q=" +
-//     city +
-//     "&limit=5&appid=" +
-//     APIKEY;
-// function locationAPI() {
-//     fetch(locationurl)
-//         .then(function (response) {
-//             return response.json();
-//         })
-//         .then(function (data) {
-//             console.log(data);
-//             myLat = data[0].lat;
-//             myLong = data[0].lon;
-//             console.log(myLat);
-//             console.log(myLong);
-//             return myLat, myLong;
-//             //this return will pull it out of th efunciton and have it available
-//         });
-// }
-// locationAPI();
-
-// var aURL =
-//     "https://api.openweathermap.org/data/2.5/onecall?lat=33.7489924&lon=-84.3902644&units=imperial&exclude=minutely,hourly&appid=" +
-//     APIKEY;
-// function test() {
-//     fetch(aURL)
-//         .then(function (response) {
-//             return response.json();
-//         })
-//         .then(function (data) {
-//             console.log(data);
-//             return data;
-//         });
-// }
-
-// test();
-// https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&exclude=minutely,hourly&appid={weatherApiKey}
-
 
 
 

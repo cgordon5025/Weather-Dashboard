@@ -13,9 +13,7 @@ nav {
     background-size: cover;
 }
 
-#inputContainer {
-    background-color: #5aa3eb;
-}
+
 
 ul button {
     background-color: #5aa3eb;
@@ -24,4 +22,15 @@ ul button {
 
 ul {
     list-style: none;
+    padding-left: 0px;
+
+}
+
+
+.card {
+    background-color: slategrey;
+}
+
+li {
+    padding-top: 5px;
 }
