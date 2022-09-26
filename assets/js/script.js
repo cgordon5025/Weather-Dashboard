@@ -143,14 +143,14 @@ function displayFuture(res) {
             futureWind: nextForecast[a].wind.speed,
             futureHumid: nextForecast[a].main.humidity,
         };
-        console.log(futureForecast.futureIcon);
+        console.log(futureForecast.futureDate);
         futureArray.push(futureForecast);
     }
     console.log("now to put the text content");
     for (var j = 0; j < 5; j++) {
 
         var futureIconURL = "http://openweathermap.org/img/wn/" + (futureArray[j].futureIcon) + ".png";
-        futureDateEl[j].textContent = (futureArray[j].futureDate)
+        futureDateEl[j].textContent = moment(futureArray[j].futureDate, "YYYY MM Do HH:mm:ss").format("MM Do YY")
         futureIconEl[j].setAttribute('src', futureIconURL)
         futureTempEl[j].textContent = ("Temp: " + futureArray[j].futureTemp + "\u00B0F");
         futureWindEl[j].textContent = ("Wind: " + futureArray[j].futureWind + "mph");
