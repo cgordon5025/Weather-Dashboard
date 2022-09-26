@@ -112,7 +112,10 @@ var nextForecast = []
 var futureForecast;
 var futureContainer = $("#fiveDayForecast")
 console.log(futureContainer)
-var futureTempEl = $(".futureTemp")
+// var futureTempEl = $(".futureTemp")
+var futureTempEl = document.getElementById("fiveDayForecast").querySelectorAll(".futureTemp")
+// var futureTempEl = document.getElementById("fiveDayForecast").querySelector(".futureTemp")
+
 var futureIconEl = $(".futureIcon")
 var futureWindEl = $(".futureWind")
 var futureHumidEl = $(".futureHumid")
@@ -139,11 +142,13 @@ function displayFuture() {
     }
     console.log("now to put the text content")
     for (var j = 0; j < 5; j++) {
+        console.log(futureTempEl[j])
+        console.log(futureTempEl)
         // var futureIconURL = "http://openweathermap.org/img/wn/" + (futureArray[j].futureIcon) + ".png"
-        // futureIconEl.attr('src', futureIconURL)
-        futureTempEl[j].text("Temp: " + futureArray[j].futureTemp + "\u00B0F");
-        futureWindEl.text("Wind: " + futureArray[j].futureWind + "mph");
-        futureHumidEl.text("Humidity: " + futureArray[j].futureHumid + "%");
+        // futureIconEl[j].attr('src', futureIconURL)
+        futureTempEl[j].textContent("Temp: " + futureArray[j].futureTemp + "\u00B0F");
+        // futureWindEl.text("Wind: " + futureArray[j].futureWind + "mph");
+        // futureHumidEl.text("Humidity: " + futureArray[j].futureHumid + "%");
     }
 }
 
@@ -165,22 +170,38 @@ init()
 
 // /;ets build out the functions to call the weather
 //lat and long from this don't match whats in the CUrrent Weather API
-// var myLat;
-// var myLong;
-// var locationurl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=5&appid=" + APIKEY;
-// function locationAPI() {
-//     fetch(locationurl)
-//         .then(function (response) {
-//             return response.json()
-//         })
-//         .then(function (data) {
-//             console.log(data)
-//             myLat = data[0].lat;
-//             myLong = data[0].lon;
-//             console.log(myLat)
-//             console.log(myLong)
-//             return myLat, myLong
-//             //this return will pull it out of th efunciton and have it available
-//         })
-// }
-// locationAPI()
+var city = "Atlanta"
+var myLat;
+var myLong;
+var locationurl = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=5&appid=" + APIKEY;
+function locationAPI() {
+    fetch(locationurl)
+        .then(function (response) {
+            return response.json()
+        })
+        .then(function (data) {
+            console.log(data)
+            myLat = data[0].lat;
+            myLong = data[0].lon;
+            console.log(myLat)
+            console.log(myLong)
+            return myLat, myLong
+            //this return will pull it out of th efunciton and have it available
+        })
+}
+locationAPI()
+
+var aURL = "https://api.openweathermap.org/data/2.5/onecall?lat=33.7489924&lon=-84.3902644&units=imperial&exclude=minutely,hourly&appid=" + APIKEY;
+function test() {
+    fetch(aURL)
+        .then(function (response) {
+            return response.json()
+        })
+        .then(function (data) {
+            console.log(data)
+            return data
+        })
+}
+
+test()
+// https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=imperial&exclude=minutely,hourly&appid={weatherApiKey}
