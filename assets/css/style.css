@@ -18,6 +18,7 @@ nav {
 ul button {
     background-color: #5aa3eb;
     list-style: none;
+    border: none
 }
 
 ul {
@@ -28,7 +29,7 @@ ul {
 
 
 .card {
-    background-color: slategrey;
+    background-color: #a7dcf6;
 }
 
 li {

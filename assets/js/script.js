@@ -12,7 +12,6 @@ var todayIconEl = $("#todayIcon");
 var todayTempEl = $("#todayTemp");
 var todayWindEl = $("#todayWind");
 var todayHumidEl = $("#todayHumid");
-var nextForecast = [];
 var futureForecast;
 var futureContainer = $("#fiveDayForecast");
 var futureTempEl = $(".futureTemp")
@@ -20,7 +19,7 @@ var futureIconEl = $(".futureIcon");
 var futureWindEl = $(".futureWind");
 var futureHumidEl = $(".futureHumid");
 var futureDateEl = $(".futureDay")
-
+var nextForecast = [];
 var futureArray = [];
 
 searchBtn.addEventListener("click", saveSearch);
@@ -73,6 +72,9 @@ async function saveSearch(event) {
         prevCities.push(cityText);
     }
     city = cityText;
+    //We want to clear these variables so that they are empty if we call a new city
+    nextForecast = [];
+    futureArray = [];
     storeCities();
     renderCities();
     getAPI().then(function (res) {
@@ -123,6 +125,9 @@ var todayWeather;
 function showPrevCity(event) {
     //if they want to see a previous city we will first extract the info and then run the same info that would happen if they just search for it
     extractCity(event);
+    //We want to clear these variables so that they are empty if we call a new city
+    nextForecast = [];
+    futureArray = [];
     getAPI();
     runFuture()
 }
@@ -151,18 +156,13 @@ async function futureAPI() {
     return someData;
 }
 
-function filterFutureDays(arr, query) {
-    return arr.filter((el) => el.includes(query));
-}
-
 function displayFuture(res) {
     for (var i = 0; i < res.length; i++) {
         //lets filter for the first instance of each day for the next 5 days, as the API gives me 3 hour intervals for 5 days
-        if (futureList[i].dt_txt.includes('00:00:00')) {
+        if (futureList[i].dt_txt.includes('12:00:00')) {
             nextForecast.push(res[i]);
         }
     }
-
     //now lets store the information into an array of objects
     for (var a = 0; a < nextForecast.length; a++) {
         futureForecast = {
